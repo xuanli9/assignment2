@@ -1,96 +1,150 @@
-import java.util.Scanner;
-
-public class pro1 {
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-		String[] foodItem = 	{"Burger", "Hot Dog", "Sandwich", "Taco", "Pizza"};
-		String[] drinkItem = 	{"Coke", "Tea", "Water"};
-
-		double[] foodPrice = {3.0, 2.5, 1.5, 2.0, 3.0};
-		double[] drinkPrice = {1.5, 2.0, 1.0};
-		
-		int[] order_Type = {0};
-		int[] order_Quantity = {0};
-		
-		System.out.println("\n");
-		System.out.println("--------------------------------------------------------");
-		printOut(foodItem, drinkItem, foodPrice, drinkPrice);
-
-		Scanner console = new Scanner(System.in);
-		String userInput;
-		boolean ordering = true;
-		int itemCount = 0;
-		double orderCost = 0;
-		int itemNumber = 0;				
-		
-		
-		while (ordering){			
-			System.out.println("Enter the item number that you want to order?\n[Enter Q to quit your order]");
-			userInput = console.nextLine();
-			if(userInput.equals("Q")){
-				if(itemCount>0){
-					System.out.println("THANK YOU FOR VISITING! SEE YOU!");					
-				}
-				else{
-					System.out.println("\n END");
-				}
-				ordering = false;
-			    }
-			else{
-				itemNumber = Integer.parseInt(userInput);	
-				if(itemNumber>8){
-					System.out.println("Try Again");
-					System.out.println("--------------------------------------------------------");
-				}
-				else{
-					order_Type[itemCount] = itemNumber;					
-					String itemName;
-					if(itemNumber<=5) itemName = foodItem[itemNumber-1]; 
-					else itemName = drinkItem[itemNumber-6];
-					if(itemNumber==3) itemName = itemName + "es"; 
-					else itemName = itemName + "s";
-					
-					System.out.println("How many " + itemName + " would you like to order?");
-					int enter_Quantity = Integer.parseInt(console.nextLine());
-					order_Quantity[itemCount] = enter_Quantity;
-					
-					System.out.println("\n Your Order:\n------------------------------------------");
-					
-					for (int i = 0; i <= itemCount; i++){
-						double price;
-						if(order_Type[i]<=5){
-							itemName = foodItem[order_Type[i]-1];
-							price = foodPrice[order_Type[i]-1];
-						}
-						else{
-							itemName = drinkItem[order_Type[i]-6];
-							price = drinkPrice[order_Type[i]-6];
-						}
-						printOutOrderLine(itemName, order_Quantity[i], price, (order_Quantity[i]*price));
-					}
-					itemCount++;
-					System.out.println("\n");
-					printOut(foodItem, drinkItem, foodPrice, drinkPrice);					
-				}	
-				
-			}
-			
-		}
-
-	}
-	static void printOut(String[] foodItem, String[] drinkItem, double[] foodPrice, double[] drinkPrice){
-		for (int i = 0; i<=4; i++){
-			System.out.printf("%15d) %20s   $ %4.2f\n", (i+1), foodItem[i], foodPrice[i]);			
-		}	
-		System.out.println("\n");
-		for (int i = 0; i<=2; i++){
-			System.out.printf("%15d) %20s   $ %4.2f\n", (i+6), drinkItem[i], drinkPrice[i]);			
-		}		
-		System.out.println("--------------------------------------------------------\n");
-	}
-	
-	static void printOutOrderLine(String itemName, int quantity, double price, double money){
-		System.out.printf("%15s -- Quantity:%2d * $ %4.2f = $ %5.2f\n", itemName, quantity, price, money);
-	}
+  public static void ordering(FoodItem[] myTray, Scanner myConsole)
+  {
+    boolean purchasing = true;
+    int selected_option = 0;
+    int ordered_quantity = 0;
+    while (purchasing)
+    {
+      System.out.println("Press 1 for Burgers: ");
+      System.out.println("Press 2 for Tacos: ");
+      System.out.println("Press 3 for Sandwiches: ");
+      System.out.println("Any other digit to quit: ");
+      selected_option = Integer.parseInt(myConsole.nextLine());
+      FoodItem[] arrayOfFoodItem1;
+      int j, i;
+      if (selected_option == 1)
+      {
+        System.out.println("How many do you need? ");
+        ordered_quantity = Integer.parseInt(myConsole.nextLine());
+        arrayOfFoodItem1 = myTray;j = myTray.length;
+        for (i = 0; i < j; i++)
+        {
+          FoodItem f = arrayOfFoodItem1[i];
+          if (f.get_name().equals("Burger")) {
+            f.update_quantity(ordered_quantity);
+          }
+        }
+      }
+      else if (selected_option == 2)
+      {
+        System.out.println("How many Tacos do you need? ");
+        ordered_quantity = Integer.parseInt(myConsole.nextLine());
+        arrayOfFoodItem1 = myTray;j = myTray.length;
+        for (i = 0; i < j; i++)
+        {
+          FoodItem f = arrayOfFoodItem1[i];
+          if (f.get_name().equals("Taco")) {
+            f.update_quantity(ordered_quantity);
+          }
+        }
+      }
+      else if (selected_option == 3)
+      {
+        System.out.println("How many sandwiches do you need? ");
+        ordered_quantity = Integer.parseInt(myConsole.nextLine());
+        arrayOfFoodItem1 = myTray;j = myTray.length;
+        for (i = 0; i < j; i++)
+        {
+          FoodItem f = arrayOfFoodItem1[i];
+          if (f.get_name().equals("Sandwich")) {
+            f.update_quantity(ordered_quantity);
+          }
+        }
+      }
+      else
+      {
+        purchasing = false;
+      }
+    }
+    double total = 0.0D;
+    FoodItem[] arrayOfFoodItem2 = myTray;int m = myTray.length;
+    for (int k = 0; k < m; k++)
+    {
+      FoodItem f = arrayOfFoodItem2[k];
+      total += f.sub_total();
+    }
+    System.out.println();
+    System.out.printf("%15s%15s%15s%15s\n", new Object[] { "Items", "Price", "Quantity", "Sub_total" });
+    System.out.println("-------------------------------------------------------------");
+    for (int i = 0; i < myTray.length; i++) {
+      if (myTray[i].get_quantity() != 0) {
+        System.out.printf("%15s%15.2f%15d%15.2f\n", new Object[] { myTray[i].get_name(), Double.valueOf(myTray[i].get_price()), Integer.valueOf(myTray[i].get_quantity()), Double.valueOf(myTray[i].get_price() * myTray[i].get_quantity()) });
+      }
+    }
+    System.out.println("-------------------------------------------------------------");
+    System.out.println("Total charge is $" + total + ".");
+  }
+  public static void displayMenu(FoodItem[] lunchItems, Scanner myConsole)
+  {
+    System.out.println("To see the menu:");
+    System.out.println("Press n by name, p by price, c by calorie");
+    String list_choice = myConsole.nextLine();
+    FoodItem[] arrayOfFoodItem;
+    if (list_choice.equals("n"))
+    {
+      for (int i = 0; i < lunchItems.length - 1; i++) {
+        for (j = i + 1; j < lunchItems.length; j++) {
+          if (lunchItems[i].get_name().compareTo(lunchItems[j].get_name()) > 0)
+          {
+            temp = lunchItems[i];
+            lunchItems[i] = lunchItems[j];
+            lunchItems[j] = temp;
+          }
+        }
+      }
+      System.out.printf("%15s%8s%6s\n", new Object[] { "Name", "Price", "Cal" });
+      System.out.println("-----------------------------");
+      arrayOfFoodItem = lunchItems;FoodItem temp = lunchItems.length;
+      for (int j = 0; j < temp; j++)
+      {
+        FoodItem f = arrayOfFoodItem[j];
+        System.out.printf("%15s%8.2f%6d\n", new Object[] { f.get_name(), Double.valueOf(f.get_price()), Integer.valueOf(f.get_calorie()) });
+      }
+    }
+    else if (list_choice.equals("c"))
+    {
+      for (int i = 0; i < lunchItems.length - 1; i++) {
+        for (j = i + 1; j < lunchItems.length; j++) {
+          if (lunchItems[i].get_calorie() > lunchItems[j].get_calorie())
+          {
+            temp = lunchItems[i];
+            lunchItems[i] = lunchItems[j];
+            lunchItems[j] = temp;
+          }
+        }
+      }
+      System.out.printf("%15s%8s%6s\n", new Object[] { "Name", "Price", "Cal" });
+      System.out.println("-----------------------------");
+      arrayOfFoodItem = lunchItems;FoodItem temp = lunchItems.length;
+      for (int j = 0; j < temp; j++)
+      {
+        FoodItem f = arrayOfFoodItem[j];
+        System.out.printf("%15s%8.2f%6d\n", new Object[] { f.get_name(), Double.valueOf(f.get_price()), Integer.valueOf(f.get_calorie()) });
+      }
+    }
+    else if (list_choice.equals("p"))
+    {
+      for (int i = 0; i < lunchItems.length - 1; i++) {
+        for (j = i + 1; j < lunchItems.length; j++) {
+          if (lunchItems[i].get_price() > lunchItems[j].get_price())
+          {
+            temp = lunchItems[i];
+            lunchItems[i] = lunchItems[j];
+            lunchItems[j] = temp;
+          }
+        }
+      }
+      System.out.printf("%15s%8s%6s\n", new Object[] { "Name", "Price", "Cal" });
+      System.out.println("-----------------------------");
+      arrayOfFoodItem = lunchItems;FoodItem temp = lunchItems.length;
+      for (int j = 0; j < temp; j++)
+      {
+        FoodItem f = arrayOfFoodItem[j];
+        System.out.printf("%15s%8.2f%6d\n", new Object[] { f.get_name(), Double.valueOf(f.get_price()), Integer.valueOf(f.get_calorie()) });
+      }
+    }
+    else
+    {
+      System.out.println("\nWrong choice!\n\n");
+    }
+  }
