@@ -1,0 +1,96 @@
+import java.util.Scanner;
+
+public class pro1 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		String[] foodItem = 	{"Burger", "Hot Dog", "Sandwich", "Taco", "Pizza"};
+		String[] drinkItem = 	{"Coke", "Tea", "Water"};
+
+		double[] foodPrice = {3.0, 2.5, 1.5, 2.0, 3.0};
+		double[] drinkPrice = {1.5, 2.0, 1.0};
+		
+		int[] order_Type = {0};
+		int[] order_Quantity = {0};
+		
+		System.out.println("\n");
+		System.out.println("--------------------------------------------------------");
+		printOut(foodItem, drinkItem, foodPrice, drinkPrice);
+
+		Scanner console = new Scanner(System.in);
+		String userInput;
+		boolean ordering = true;
+		int itemCount = 0;
+		double orderCost = 0;
+		int itemNumber = 0;				
+		
+		
+		while (ordering){			
+			System.out.println("Enter the item number that you want to order?\n[Enter Q to quit your order]");
+			userInput = console.nextLine();
+			if(userInput.equals("Q")){
+				if(itemCount>0){
+					System.out.println("THANK YOU FOR VISITING! SEE YOU!");					
+				}
+				else{
+					System.out.println("\n END");
+				}
+				ordering = false;
+			    }
+			else{
+				itemNumber = Integer.parseInt(userInput);	
+				if(itemNumber>8){
+					System.out.println("Try Again");
+					System.out.println("--------------------------------------------------------");
+				}
+				else{
+					order_Type[itemCount] = itemNumber;					
+					String itemName;
+					if(itemNumber<=5) itemName = foodItem[itemNumber-1]; 
+					else itemName = drinkItem[itemNumber-6];
+					if(itemNumber==3) itemName = itemName + "es"; 
+					else itemName = itemName + "s";
+					
+					System.out.println("How many " + itemName + " would you like to order?");
+					int enter_Quantity = Integer.parseInt(console.nextLine());
+					order_Quantity[itemCount] = enter_Quantity;
+					
+					System.out.println("\n Your Order:\n------------------------------------------");
+					
+					for (int i = 0; i <= itemCount; i++){
+						double price;
+						if(order_Type[i]<=5){
+							itemName = foodItem[order_Type[i]-1];
+							price = foodPrice[order_Type[i]-1];
+						}
+						else{
+							itemName = drinkItem[order_Type[i]-6];
+							price = drinkPrice[order_Type[i]-6];
+						}
+						printOutOrderLine(itemName, order_Quantity[i], price, (order_Quantity[i]*price));
+					}
+					itemCount++;
+					System.out.println("\n");
+					printOut(foodItem, drinkItem, foodPrice, drinkPrice);					
+				}	
+				
+			}
+			
+		}
+
+	}
+	static void printOut(String[] foodItem, String[] drinkItem, double[] foodPrice, double[] drinkPrice){
+		for (int i = 0; i<=4; i++){
+			System.out.printf("%15d) %20s   $ %4.2f\n", (i+1), foodItem[i], foodPrice[i]);			
+		}	
+		System.out.println("\n");
+		for (int i = 0; i<=2; i++){
+			System.out.printf("%15d) %20s   $ %4.2f\n", (i+6), drinkItem[i], drinkPrice[i]);			
+		}		
+		System.out.println("--------------------------------------------------------\n");
+	}
+	
+	static void printOutOrderLine(String itemName, int quantity, double price, double money){
+		System.out.printf("%15s -- Quantity:%2d * $ %4.2f = $ %5.2f\n", itemName, quantity, price, money);
+	}
